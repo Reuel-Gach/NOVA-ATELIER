@@ -20,10 +20,9 @@ export default function Navbar() {
   const department = user?.publicMetadata?.department as string | undefined;
   
   const adminRoute = department === "executive" ? "/admin/inventory" : `/admin/${department}`;
-
   const totalItems = useCart((state) => state.totalItems());
 
-  // Prevent hydration mismatch for the theme toggle icon
+  // Prevent hydration mismatch for theme and persisted local storage states
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -108,14 +107,15 @@ export default function Navbar() {
               </button>
             </SignInButton>
           )}
-<Link href="/checkout" className="relative group">
-  <ShoppingBag className="w-5 h-5 group-hover:text-[var(--color-gold)] transition-colors" />
-  {totalItems > 0 && (
-    <span className="absolute -top-2 -right-2 bg-[var(--color-gold)] text-[var(--color-obsidian)] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-      {totalItems}
-    </span>
-  )}
-</Link>
+
+          <Link href="/checkout" className="relative group">
+            <ShoppingBag className="w-5 h-5 group-hover:text-[var(--color-gold)] transition-colors" />
+            {mounted && totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[var(--color-gold)] text-[var(--color-obsidian)] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </Link>
         </div>
       </div>
     </motion.header>

@@ -7,6 +7,7 @@ const isPublicRoute = createRouteMatcher([
   "/products(.*)",
   "/about(.*)",
   "/api/webhooks(.*)",
+  "/api/uploadthing", // Whitelisted to allow Uploadthing callbacks to bypass Clerk
 ]);
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);

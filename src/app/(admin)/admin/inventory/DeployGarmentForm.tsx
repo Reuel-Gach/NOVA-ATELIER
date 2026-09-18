@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { createProduct } from "@/server/actions/inventory";
+import "@uploadthing/react/styles.css";
 
 export default function DeployGarmentForm() {
   const [images, setImages] = useState<{ url: string; key: string }[]>([]);

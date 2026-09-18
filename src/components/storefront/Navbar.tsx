@@ -64,12 +64,8 @@ export default function Navbar() {
           </h1>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex flex-1 justify-center gap-8 text-sm uppercase tracking-widest font-medium">
-          <Link href="/street" className="hover:text-[var(--color-gold)] transition-colors">Street</Link>
-          <Link href="/core" className="hover:text-[var(--color-gold)] transition-colors">Core</Link>
-          <Link href="/vip" className="hover:text-[var(--color-gold)] transition-colors">Executive</Link>
-        </nav>
+        {/* Desktop Navigation Spacer (Reserved for future category upgrades) */}
+        <div className="hidden md:flex flex-1 justify-center"></div>
 
         {/* Utilities */}
         <div className="flex flex-1 justify-end items-center gap-5 md:gap-6">

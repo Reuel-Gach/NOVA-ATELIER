@@ -5,12 +5,26 @@ export async function POST(req: Request) {
   try {
     const { phone, amount, reference } = await req.json();
 
-    // 1. Format the phone number to 254...
-    let formattedPhone = phone.replace(/\s+/g, "");
+    // 1. Bulletproof Phone Number Formatter
+    // Strip everything that isn't a number (spaces, dashes, plus signs, brackets)
+    let formattedPhone = phone.replace(/[^0-9]/g, ""); 
+
+    // Auto-correct to Safaricom's required 254 format
     if (formattedPhone.startsWith("0")) {
       formattedPhone = "254" + formattedPhone.slice(1);
-    } else if (formattedPhone.startsWith("+")) {
-      formattedPhone = formattedPhone.slice(1);
+    } else if (formattedPhone.startsWith("7") || formattedPhone.startsWith("1")) {
+      formattedPhone = "254" + formattedPhone;
+    } else if (formattedPhone.startsWith("254") && formattedPhone.length > 12) {
+      // Just in case someone typed something wild like 25407...
+       formattedPhone = "254" + formattedPhone.slice(-9);
+    }
+
+    // Final security check: must be exactly 12 digits starting with 254
+    if (!/^254\d{9}$/.test(formattedPhone)) {
+      return NextResponse.json({ 
+        success: false, 
+        error: "Invalid phone format. Please use standard Kenyan format (e.g., 07XX... or 01XX...)" 
+      }, { status: 400 });
     }
 
     const consumerKey = process.env.MPESA_CONSUMER_KEY!;
@@ -39,7 +53,7 @@ export async function POST(req: Request) {
       Password: password,
       Timestamp: timestamp,
       TransactionType: "CustomerPayBillOnline",
-      Amount: Math.ceil(amount), // M-Pesa requires whole numbers
+      Amount: Math.ceil(amount), // M-Pesa strictly requires whole numbers
       PartyA: formattedPhone,
       PartyB: shortcode,
       PhoneNumber: formattedPhone,
